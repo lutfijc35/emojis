@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>Emojis 😄</title>
+</head>
+<style>
+  .text {
+    text-align: center;
+  }
+
+  .container {
+    text-align: center;
+  }
+
+  .container pre {
+    display: inline-block;
+    text-align: left;
+  }
+</style>
+
+<body>
+  <div id="helloVue">
+
+    <div class="text">
+      <h1>{{text}}</h1>
+      <textarea rows="4" cols="50" v-model="store">
+  </textarea>
+    </div>
+    <div class="container">
+      <pre v-show="store != ''" class="m-0">{{ getFrequency(store) }}</pre>
+    </div>
+
+
+  </div>
+  <script src="https://cdn.jsdelivr.net/npm/vue@2.6.0/dist/vue.min.js"></script>
+  <script type="text/javascript">
+    new Vue({
+      el: '#helloVue',
+      data: {
+        text: 'Emojis 😄',
+        store: 'lorem 🚀🚀🚀 ipsum 💩 💩 dolor 😍'
+      },
+      methods: {
+        emojiUnicode(emoji) {
+          var comp;
+          if (emoji.length === 1) {
+            comp = emoji.charCodeAt(0);
+          }
+          comp = (
+            (emoji.charCodeAt(0) - 0xD800) * 0x400 +
+            (emoji.charCodeAt(1) - 0xDC00) + 0x10000
+          );
+          if (comp < 0) {
+            comp = emoji.charCodeAt(0);
+          }
+          return comp.toString("16");
+        },
+        getFrequency(string) { // count emojis per Symbols
+          var freq = {};
+          let emojis = [];
+          for (var character of string) {
+            if (character.length === 1) continue;
+            (freq[character]) ? freq[character]++: freq[character] = 1;
+          }
+          Object.keys(freq).forEach(key => {
+            emojis.push({
+              emojis: key,
+              count: freq[key],
+              code: this.emojiUnicode(key)
+            })
+          })
+          return emojis;
+        }
+      }
+    })
+  </script>
+</body>
+
+</html>
